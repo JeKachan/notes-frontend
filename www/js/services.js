@@ -1,50 +1,64 @@
 angular.module('starter.services', [])
 
-.factory('Chats', function() {
+.factory('Notes', function() {
   // Might use a resource here that returns a JSON array
 
   // Some fake testing data
-  var chats = [{
+  var notes = [
+  {
     id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
+    title: 'Learn Ionic',
+    desc: 'The top open source framework for building amazing mobile apps.',
+  },
+  {
     id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
+    title: 'Learn Cordova',
+    desc: 'Mobile apps with HTML, CSS & JS target multiple platforms with one code base free and open source',
+  },
+  {
     id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
+    title: 'Learn JavaScript',
+    desc: 'JavaScript is the programming language of HTML and the Web.',
   }];
+
+  function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+      if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+  }
+
+  function getNote(noteId) {
+    for (var i = 0; i < notes.length; i++) {
+      if (notes[i].id === parseInt(noteId)) {
+        return notes[i];
+      }
+    }
+    return null;
+  }
 
   return {
     all: function() {
-      return chats;
+      return notes.map(function(note) {
+        return clone(note);
+      });
     },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
+    remove: function(note) {
+      notes.splice(notes.indexOf(note), 1);
     },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
-        }
+    get: function(noteId) {
+      return clone(getNote(noteId))
+    },
+    update: function(_note) {
+      var note = getNote(_note.id);
+      if(!note) {
+        return;
       }
-      return null;
+      note.title = _note.title;
+      note.desc = _note.desc;
     }
+
   };
 });
