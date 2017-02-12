@@ -6,22 +6,32 @@
 -->
 
 <ion-view view-title="Edit note">
-    <ion-content class="padding">
-        <div class="list">
-            <label class="item item-input">
-                <input type="text" placeholder="Title"
-                       ng-model="note.title"
-                       name="title" />
-            </label>
-            <label class="item item-input">
-                <textarea placeholder="Description"
-                          ng-model="note.desc"
-                          rows="4"
-                          name="desc"></textarea>
-            </label>
-            <button class="button button-block button-balanced" ng-click="saveChanges()">
-                Save changes
-            </button>
-        </div>
-    </ion-content>
+  <ion-content class="padding">
+    <form name="editNoteForm">
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" placeholder="Title"
+                 ng-model="note.title"
+                 name="title"
+                 required
+                 ng-maxlength="255"
+                 ng-minlength="3"/>
+        </label>
+        <label class="item item-input">
+          <textarea placeholder="Description"
+                    ng-model="note.desc"
+                    rows="4"
+                    name="desc"
+                    required
+                    ng-maxlength="255"
+                    ng-minlength="3"></textarea>
+        </label>
+      </div>
+      <button class="button button-block button-balanced"
+              ng-disabled="editNoteForm.$invalid"
+              ng-click="saveChanges()">
+        Save changes
+      </button>
+    </form>
+  </ion-content>
 </ion-view>

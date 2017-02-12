@@ -2,7 +2,9 @@
   <ion-content>
     <ion-list>
       <ion-item class="item-remove-animate item-icon-right"
-                ng-repeat="note in notes" type="item-text-wrap" href="#/tab/notes/{{note.id}}">
+                ng-repeat="note in notes"
+                type="item-text-wrap"
+                href="#/tab/notes/{{note.id}}">
         <h2>{{note.title}}</h2>
         <p>{{note.desc}}</p>
         <i class="icon ion-chevron-right icon-accessory"></i>

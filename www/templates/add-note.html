@@ -1,0 +1,28 @@
+<ion-view view-title="Add note">
+  <ion-content class="padding">
+    <form name="addNoteForm">
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" placeholder="Title *"
+                 ng-model="note.title"
+                 name="title"
+                 ng-minlength="3"
+                 ng-maxlength="255"
+                 required/>
+        </label>
+        <label class="item item-input">
+        <textarea placeholder="Description *"
+                  ng-model="note.desc"
+                  rows="4"
+                  name="desc"
+                  ng-minlength="3"
+                  ng-maxlength="255"
+                  required></textarea>
+        </label>
+      </div>
+      <button class="button button-block button-calm"
+              ng-disabled="addNoteForm.$invalid"
+              ng-click="addNote(addNoteForm)">Add note</button>
+    </form>
+  </ion-content>
+</ion-view>

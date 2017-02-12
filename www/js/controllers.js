@@ -15,10 +15,33 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('NoteDetailCtrl', function($scope, $stateParams, Notes) {
-  $scope.note = Notes.get($stateParams.noteId);
+.controller('NoteDetailCtrl', function($scope, $stateParams, Notes, $state) {
+  $scope.note = Notes.clone(Notes.get($stateParams.noteId));
 
   $scope.saveChanges = function() {
-    Notes.update($scope.note);
+    Notes.update($scope.note).then(function(res) {
+      if (res.success) {
+        $state.transitionTo("tab.notes");
+      }
+    });
+  }
+})
+
+.controller("AddNoteCtrl", function($scope, Notes, $state) {
+  $scope.note = {
+    title: "",
+    desc: ""
+  };
+
+  $scope.addNote = function(addNoteForm) {
+    if(addNoteForm.$invalid){
+      return;
+    }
+    Notes.add($scope.note)
+      .then(function(res) {
+        if (res.success) {
+          $state.transitionTo("tab.notes");
+        }
+      });
   }
 });

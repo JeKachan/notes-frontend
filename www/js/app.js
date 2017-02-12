@@ -37,7 +37,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       .state('tab', {
         url: '/tab',
         abstract: true,
-        cache: false,
         templateUrl: 'templates/tabs.html'
       })
 
@@ -58,6 +57,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           'tab-notes': {
             templateUrl: 'templates/note-detail.html',
             controller: 'NoteDetailCtrl'
+          }
+        }
+      })
+      .state('tab.add-note', {
+        url: "/addnote",
+        views: {
+          "tab-add-note": {
+            templateUrl: 'templates/add-note.html',
+            controller: 'AddNoteCtrl'
           }
         }
       });

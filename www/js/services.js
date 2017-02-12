@@ -1,64 +1,87 @@
 angular.module('starter.services', [])
 
-.factory('Notes', function() {
-  // Might use a resource here that returns a JSON array
+.factory('Notes', function($http) {
+  var noteApiBaseUrl = "http://localhost:3000";
+  var notes = [];
 
-  // Some fake testing data
-  var notes = [
-  {
-    id: 0,
-    title: 'Learn Ionic',
-    desc: 'The top open source framework for building amazing mobile apps.',
-  },
-  {
-    id: 1,
-    title: 'Learn Cordova',
-    desc: 'Mobile apps with HTML, CSS & JS target multiple platforms with one code base free and open source',
-  },
-  {
-    id: 2,
-    title: 'Learn JavaScript',
-    desc: 'JavaScript is the programming language of HTML and the Web.',
-  }];
-
-  function clone(obj) {
-    if (null == obj || "object" != typeof obj) return obj;
-    var copy = obj.constructor();
-    for (var attr in obj) {
-      if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
-    }
-    return copy;
-  }
-
-  function getNote(noteId) {
-    for (var i = 0; i < notes.length; i++) {
-      if (notes[i].id === parseInt(noteId)) {
-        return notes[i];
-      }
-    }
-    return null;
-  }
-
-  return {
-    all: function() {
-      return notes.map(function(note) {
-        return clone(note);
-      });
-    },
-    remove: function(note) {
-      notes.splice(notes.indexOf(note), 1);
-    },
-    get: function(noteId) {
-      return clone(getNote(noteId))
-    },
-    update: function(_note) {
-      var note = getNote(_note.id);
-      if(!note) {
+  $http.get(noteApiBaseUrl + "/notes/")
+    .then(function(res) {
+      if (!res.data || res.data.length === 0){
         return;
       }
-      note.title = _note.title;
-      note.desc = _note.desc;
-    }
+      for (var i = 0; i < res.data.length; i++) {
+        notes.push(res.data[i]);
+      }
+    });
 
+
+  return {
+    clone: function(item) {
+      return JSON.parse(JSON.stringify(item))
+    },
+    all: function() {
+      return notes;
+    },
+    remove: function(note) {
+      $http({
+        url: noteApiBaseUrl + "/notes/delete/" + note.id,
+        method: "DELETE"
+      }).then(function(res) {
+        if (!res.data.success) {
+          return res;
+        }
+        notes.splice(notes.indexOf(note), 1);
+      });
+    },
+    get: function(noteId) {
+      for (var i = 0; i < notes.length; i++) {
+        if (notes[i].id === parseInt(noteId)) {
+          return notes[i];
+        }
+      }
+      return null;
+    },
+    update: function(note) {
+      var self = this;
+      return $http({
+        url: noteApiBaseUrl + "/notes/update",
+        method: "POST",
+        data: note
+      }).then(function (res) {
+        if (!res.data.success) {
+          return res.data;
+        }
+        var souceNote = self.get(note.id);
+        souceNote.title = note.title;
+        souceNote.desc = note.desc;
+        return res.data;
+      })
+    },
+    add: function(note) {
+      if (!note) {
+        return;
+      }
+
+      return $http({
+        url: noteApiBaseUrl + "/notes/add",
+        method: "POST",
+        data: note
+      }).then(function success(res) {
+        var newNote = {
+          id: res.data.id,
+          title: res.data.title,
+          desc: res.data.desc
+        };
+        notes.push(newNote);
+        return {
+          success: true
+        }
+      }, function error(err) {
+        return {
+          success: false,
+          err: err
+        }
+      });
+    }
   };
 });
